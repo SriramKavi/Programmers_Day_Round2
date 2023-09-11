@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tic-Tac-Toe</title>
+        <!-- <link href="/your-path-to-uicons/css/uicons-[your-style].css" rel="stylesheet"> -->
+        <link rel="icon" href="images/tic-tac-toe.png">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+            }
+
+            .title1{
+                color: hotpink;
+                display: inline;
+            }
+
+            .title2{
+                color: darkblue;
+                display: inline;
+                margin-left: 10px;
+            }
+
+            .game-container {
+                display: grid;
+                grid-template-columns: repeat(3, 100px);
+                gap: 5px;
+                margin: 20px auto;
+                width: 300px;
+            }
+
+            .cell {
+                width: 100px;
+                height: 100px;
+                background-color: #eee;
+                border: 1px solid #ccc;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 32px;
+                cursor: pointer;
+                border-radius: 5px;
+                color: darkblue;
+            }
+
+            .message {
+                font-size: 18px;
+                margin-top: 10px;
+            }
+
+            .reset-button {
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #333;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+                margin-top: 20px;
+            }
+
+            .reset-button:hover {
+                background-color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="title1">Tic Tac Toe</h1>
+        <h1 class="title2">Game</h1>
+        <div class="message" id="message"></div>
+        <div class="game-container" onclick="makeMove(event)">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+        <button class="reset-button" onclick="resetGame()">Reset Game</button>
+        <script>
+            let currentPlayer = 'X';
+            let gameBoard = ['', '', '', '', '', '', '', '', ''];
+            let gameActive = true;
+            const messageDisplay = document.getElementById('message');
+            const cells = document.querySelectorAll('.cell');
+
+            function makeMove(event) {
+                const cell = event.target;
+                const cellIndex = Array.from(cells).indexOf(cell);
+
+                if (gameBoard[cellIndex] === '' && gameActive) {
+                    gameBoard[cellIndex] = currentPlayer;
+                    cell.textContent = currentPlayer;
+                    checkWinner();
+                    togglePlayer();
+                }
+            }
+
+            function togglePlayer() {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+                // Update the message to show the current player's turn or the winner
+                if (gameActive) {
+                    messageDisplay.innerHTML = `<span style="color: red;">'${currentPlayer}'</span> 
+                    <span style="color: darkblue;margin-left: 10px;">is next</span>`;
+                }
+            }
+
+            function checkWinner() {
+                const winPatterns = [
+                    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                    [0, 4, 8], [2, 4, 6]
+                ];
+
+                for (let pattern of winPatterns) {
+                    const [a, b, c] = pattern;
+                    if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                        gameActive = false;
+                        messageDisplay.textContent = `Player ${currentPlayer} won!`;
+                        return;
+                    }
+                }
+
+                if (!gameBoard.includes('')) {
+                    gameActive = false;
+                    messageDisplay.textContent = "It's a draw!";
+                }
+            }
+
+            function resetGame() {
+                currentPlayer = 'X';
+                gameBoard = ['', '', '', '', '', '', '', '', ''];
+                gameActive = true;
+                messageDisplay.innerHTML = `<span style="color: red;">'${currentPlayer}'</span>
+                    <span style="color: darkblue;margin-left: 10px;">is next</span>`;
+                cells.forEach(cell => cell.textContent = '');
+            }
+
+            messageDisplay.innerHTML = `<span style="color: red;">'${currentPlayer}'</span>
+                    <span style="color: darkblue;margin-left: 10px;">is next</span>`;
+        </script>
+        </body>
+</html>
